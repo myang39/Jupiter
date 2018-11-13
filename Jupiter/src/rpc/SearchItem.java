@@ -2,6 +2,7 @@ package rpc;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,6 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import db.DBConnection;
+import db.DBConnectionFactory;
+import entity.Item;
 
 /**
  * Servlet implementation class SearchItem
@@ -31,18 +36,25 @@ public class SearchItem extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub		
-		JSONArray array = new JSONArray();
-		
-		try {
-			array.put(new JSONObject().put("username", "abcd"));
-			array.put(new JSONObject().put("username", "1234"));
-		} catch(JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		RpcHelper.writeJsonArray(response, array);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+	    double lat = Double.parseDouble(request.getParameter("lat"));
+	    double lon = Double.parseDouble(request.getParameter("lon"));
+	    // Term can be empty or null.
+	    String term = request.getParameter("term");
+	    DBConnection connection = DBConnectionFactory.getConnection();
+	    try {
+	    	List<Item> items = connection.searchItems(lat, lon, term);
+	        JSONArray array = new JSONArray();
+	        for (Item item : items) {
+	        	array.put(item.toJSONObject());
+	        }
+	        RpcHelper.writeJsonArray(response, array);
+         	} catch (Exception e) {
+         		e.printStackTrace();
+         	} finally {
+         		connection.close();
+         	}
 	}
 
 	/**
