@@ -118,7 +118,7 @@ public class MySQLConnection implements DBConnection{
 				statement.setString(1, itemId);
 				ResultSet rs = statement.executeQuery();
 
-                                                         // [ {“name”: “abcd”, “rating”: 0, “address”:”abcd”, ...},  ]
+          // [ {“name”: “abcd”, “rating”: 0, “address”:”abcd”, ...},  ]
 				
 				while(rs.next()) {
 					ItemBuilder builder = new ItemBuilder();
@@ -147,17 +147,18 @@ public class MySQLConnection implements DBConnection{
 		if (conn == null) {
 			return categories;
 		}
-		String sql = "SELECT category FROM categories WHERE item_id = ?";
 		try {
+			String sql = "SELECT category FROM categories WHERE item_id = ?";
 			PreparedStatement statement = conn.prepareStatement(sql);
 			statement.setString(1, itemId);
 
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				categories.add(rs.getString("category"));
+				String category = rs.getString("category");
+                categories.add(category);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 		return categories;
 	}
