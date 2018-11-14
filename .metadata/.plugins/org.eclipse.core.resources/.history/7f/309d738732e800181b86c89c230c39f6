@@ -258,11 +258,11 @@
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                callback(xhr.responseText);
+                    callback(xhr.responseText);
             } else if (xhr.status === 403) {
-                onSessionInvalid();
+                    onSessionInvalid();
             } else {
-                errorHandler();
+                    errorHandler();
             }
         };
 

@@ -145,16 +145,16 @@
 
         ajax('POST', url, req,
         // successful callback
-	        function(res) {
-	            var result = JSON.parse(res);
-	            // successfully logged in
-	            if (result.result === 'SUCCESS') {
-	            	onSessionValid(result);
-	            }
-	        },
-	        // error
-	        function() {
-	        	showLoginError();
+        function(res) {
+            var result = JSON.parse(res);
+            // successfully logged in
+            if (result.result === 'SUCCESS') {
+            	onSessionValid(result);
+            }
+        },
+        // error
+        function() {
+        	showLoginError();
         });
     }
 
@@ -257,13 +257,11 @@
         xhr.open(method, url, true);
 
         xhr.onload = function() {
-            if (xhr.status === 200) {
-                callback(xhr.responseText);
-            } else if (xhr.status === 403) {
-                onSessionInvalid();
-            } else {
-                errorHandler();
-            }
+        	if (xhr.status === 200) {
+        		callback(xhr.responseText);
+        	} else {
+        		errorHandler();
+        	}
         };
 
         xhr.onerror = function() {

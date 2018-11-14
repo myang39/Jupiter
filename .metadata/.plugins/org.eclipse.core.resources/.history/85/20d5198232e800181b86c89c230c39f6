@@ -257,13 +257,11 @@
         xhr.open(method, url, true);
 
         xhr.onload = function() {
-            if (xhr.status === 200) {
-                callback(xhr.responseText);
-            } else if (xhr.status === 403) {
-                onSessionInvalid();
-            } else {
-                errorHandler();
-            }
+        	if (xhr.status === 200) {
+        		callback(xhr.responseText);
+        	} else {
+        		errorHandler();
+        	}
         };
 
         xhr.onerror = function() {
