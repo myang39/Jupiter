@@ -40,30 +40,22 @@ public class ItemHistory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
-		
-		// allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-	        response.setStatus(403);
-	        return;
-		}
-		//
-         String userId = request.getParameter("user_id");
-         JSONArray array = new JSONArray();
-         DBConnection conn = DBConnectionFactory.getConnection();
-         try {
-             Set<Item> items = conn.getFavoriteItems(userId);
-             for (Item item : items) {
-                     JSONObject obj = item.toJSONObject();
-                     obj.append("favorite", true);
-                     array.put(obj);
+             String userId = request.getParameter("user_id");
+             JSONArray array = new JSONArray();
+             DBConnection conn = DBConnectionFactory.getConnection();
+             try {
+                 Set<Item> items = conn.getFavoriteItems(userId);
+                 for (Item item : items) {
+                         JSONObject obj = item.toJSONObject();
+                         obj.append("favorite", true);
+                         array.put(obj);
+                 }
+                 RpcHelper.writeJsonArray(response, array);
+             } catch (JSONException e) {
+            	 e.printStackTrace();
+             } finally {
+            	 conn.close();
              }
-             RpcHelper.writeJsonArray(response, array);
-         } catch (JSONException e) {
-        	 e.printStackTrace();
-         } finally {
-        	 conn.close();
-         }
 	}
 
     /**
@@ -71,14 +63,6 @@ public class ItemHistory extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	DBConnection connection = DBConnectionFactory.getConnection();
-    	
-    	// allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-	        response.setStatus(403);
-	        return;
-		}
-		//
     	try {
           JSONObject input = RpcHelper.readJSONObject(request);
           String userId = input.getString("user_id");
@@ -102,13 +86,6 @@ public class ItemHistory extends HttpServlet {
     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
-    	// allow access only if session exists
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-	        response.setStatus(403);
-	        return;
-		}
-		//
     	DBConnection connection = DBConnectionFactory.getConnection();
     	try {
           JSONObject input = RpcHelper.readJSONObject(request);
