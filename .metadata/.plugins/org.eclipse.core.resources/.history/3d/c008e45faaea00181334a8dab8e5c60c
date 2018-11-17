@@ -113,7 +113,7 @@
     function getLocationFromIP() {
         // Get location from http://ipinfo.io/json
         // var url = 'http://ipinfo.io/json'
-    	var url = 'http://ip-api.com/json';
+    	var url = 'http://ip-api.com/json'
         var req = null;
         ajax('GET', url, req, function(res) {
             var result = JSON.parse(res);
